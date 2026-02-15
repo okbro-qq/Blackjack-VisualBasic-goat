@@ -43,23 +43,6 @@ http://localhost:3000/navigate?url=https://evil.com
 http://localhost:3000/navigate?url=http://attacker.com/phishing-page
 ```
 
-### Impact
-- **CVSS Score:** Medium (5.4)
-- Phishing attacks
-- Credential harvesting
-- Malware distribution
-
-### Remediation
-```vb
-' Whitelist allowed destinations
-Dim allowedPaths = New List(Of String) From {"/", "/game", "/chat", "/settings", "/background", "/logs", "/dashboard"}
-If allowedPaths.Contains(urlParam) Then
-    response.RedirectLocation = urlParam
-Else
-    SendResponse(response, "Invalid redirect destination", 400)
-End If
-```
-
 ---
 
 ## 2. Path Traversal (CWE-22)
@@ -96,29 +79,6 @@ http://localhost:3000/settings/load?config=../package
 http://localhost:3000/settings/load?config=../../Windows/System32/drivers/etc/hosts
 ```
 
-### Impact
-- **CVSS Score:** High (7.5)
-- Read sensitive application files
-- Access configuration files
-- Expose source code
-- Read system files (if permissions allow)
-
-### Remediation
-```vb
-' Sanitize the config name - allow only alphanumeric characters
-If Not Regex.IsMatch(configName, "^[a-zA-Z0-9_-]+$") Then
-    SendResponse(response, "Invalid config name", 400)
-    Return
-End If
-
-' Validate the final path stays within configs directory
-Dim fullPath = Path.GetFullPath($"configs/{configName}.json")
-Dim configsDir = Path.GetFullPath("configs/")
-If Not fullPath.StartsWith(configsDir) Then
-    SendResponse(response, "Access denied", 403)
-    Return
-End If
-```
 
 ---
 
@@ -193,47 +153,6 @@ http://localhost:3000/background/proxy?src=http://192.168.1.1
 http://localhost:3000/background/proxy?src=http://10.0.0.1
 http://localhost:3000/background/proxy?src=http://172.16.0.1
 ```
-
-### Impact
-- **CVSS Score:** Critical (9.1)
-- Access internal services not exposed to internet
-- Bypass firewall restrictions
-- Steal cloud credentials (AWS/GCP/Azure)
-- Port scan internal network
-- Access sensitive internal APIs
-- Potential Remote Code Execution on internal services
-
-### Remediation
-```vb
-' Whitelist allowed protocols
-Dim uri As Uri
-If Not Uri.TryCreate(srcUrl, UriKind.Absolute, uri) Then
-    SendResponse(response, "Invalid URL", 400)
-    Return
-End If
-
-If uri.Scheme <> "https" Then
-    SendResponse(response, "Only HTTPS URLs are allowed", 400)
-    Return
-End If
-
-' Block internal IP ranges
-Dim host = uri.Host
-If host = "localhost" OrElse host = "127.0.0.1" OrElse _
-   host.StartsWith("192.168.") OrElse host.StartsWith("10.") OrElse _
-   host.StartsWith("172.16.") OrElse host = "169.254.169.254" Then
-    SendResponse(response, "Access to internal resources denied", 403)
-    Return
-End If
-
-' Whitelist allowed domains
-Dim allowedDomains = New List(Of String) From {"imgur.com", "cdn.example.com"}
-If Not allowedDomains.Any(Function(d) host.EndsWith(d)) Then
-    SendResponse(response, "Domain not allowed", 403)
-    Return
-End If
-```
-
 ---
 
 ## 4. Plaintext Password Storage (CWE-256)
@@ -267,45 +186,6 @@ curl -X POST http://localhost:3000/signup \
 
 # Password is now stored in plaintext in server memory
 # Any server compromise exposes all passwords
-```
-
-### Impact
-- **CVSS Score:** High (7.4)
-- Full password exposure on data breach
-- No protection if server memory is dumped
-- Passwords visible in logs/debugging
-- Credential reuse attacks
-
-### Remediation
-```vb
-Imports System.Security.Cryptography
-Imports Microsoft.AspNetCore.Cryptography.KeyDerivation
-
-Function HashPassword(password As String) As String
-    ' Generate a salt
-    Dim salt(127 / 8 - 1) As Byte
-    Using rng As New RNGCryptoServiceProvider()
-        rng.GetBytes(salt)
-    End Using
-    
-    ' Hash the password
-    Dim hash = KeyDerivation.Pbkdf2(
-        password:=password,
-        salt:=salt,
-        prf:=KeyDerivationPrf.HMACSHA256,
-        iterationCount:=10000,
-        numBytesRequested:=256 / 8
-    )
-    
-    Return Convert.ToBase64String(salt) & ":" & Convert.ToBase64String(hash)
-End Function
-
-' Store hashed password
-Dim newUser As New User With {
-    .Username = username,
-    .Password = HashPassword(password),  ' ✅ Store hash
-    .Role = "player"
-}
 ```
 
 ---
@@ -392,83 +272,6 @@ sed -i 's/role\tplayer/role\tdealer/g' cookies.txt
 curl -b cookies.txt http://localhost:3000/dashboard
 ```
 
-### Impact
-- **CVSS Score:** Critical (9.1)
-- Complete horizontal privilege escalation
-- Unauthorized access to admin functions
-- Access to sensitive game statistics
-- Potential data manipulation
-- Bypasses all authentication controls
-
-### Remediation
-```vb
-' Use server-side session management
-Private sessions As New Dictionary(Of String, UserSession)
-
-Class UserSession
-    Public Property SessionId As String
-    Public Property Username As String
-    Public Property Role As String
-    Public Property CreatedAt As DateTime
-    Public Property LastAccess As DateTime
-End Class
-
-Function CreateSession(username As String, role As String) As String
-    Dim sessionId = Guid.NewGuid().ToString()
-    sessions.Add(sessionId, New UserSession With {
-        .SessionId = sessionId,
-        .Username = username,
-        .Role = role,
-        .CreatedAt = DateTime.Now,
-        .LastAccess = DateTime.Now
-    })
-    Return sessionId
-End Function
-
-Function ValidateSession(request As HttpListenerRequest) As UserSession
-    Dim sessionId = GetCookieValue(request, "session_id")
-    If String.IsNullOrEmpty(sessionId) Then Return Nothing
-    
-    If sessions.ContainsKey(sessionId) Then
-        Dim session = sessions(sessionId)
-        
-        ' Check session expiry (30 minutes)
-        If DateTime.Now.Subtract(session.LastAccess).TotalMinutes > 30 Then
-            sessions.Remove(sessionId)
-            Return Nothing
-        End If
-        
-        session.LastAccess = DateTime.Now
-        Return session
-    End If
-    
-    Return Nothing
-End Function
-
-Sub ServeDashboardPage(request As HttpListenerRequest, response As HttpListenerResponse)
-    Dim session = ValidateSession(request)  ' ✅ Server-side validation
-    
-    If session Is Nothing OrElse session.Role <> "dealer" Then
-        ' Show access denied
-        Return
-    End If
-    
-    ' Show dealer dashboard
-End Sub
-```
-
----
-
-## Summary of Vulnerabilities
-
-| # | Vulnerability | CVSS | Severity | Lines | Exploitable |
-|---|---------------|------|----------|-------|-------------|
-| 1 | Open Redirect | 5.4 | Medium | 78-86 | ✅ |
-| 2 | Path Traversal | 7.5 | High | 88-105 | ✅ |
-| 3 | SSRF | 9.1 | Critical | 794-839 | ✅ |
-| 4 | Plaintext Passwords | 7.4 | High | 530-534, 578 | ✅ |
-| 5 | Broken Access Control | 9.1 | Critical | 869-874, 406-418 | ✅ |
-
 ---
 
 ## Testing Environment Setup
@@ -488,36 +291,3 @@ Access at: `http://localhost:3000/`
 ### Default Test Credentials
 - **Dealer Account:** username=`dealer`, password=`dealer123`
 - **Regular User:** Create via `/auth` page
-
----
-
-## Responsible Disclosure
-
-This application was created **intentionally with vulnerabilities** for:
-- Security testing
-- Educational purposes
-- Vulnerability scanning tool validation
-- Penetration testing practice
-
-**DO NOT:**
-- Deploy to production
-- Expose to the internet
-- Use in any real-world application
-- Store real user data
-
----
-
-## References
-
-- [CWE-601: Open Redirect](https://cwe.mitre.org/data/definitions/601.html)
-- [CWE-22: Path Traversal](https://cwe.mitre.org/data/definitions/22.html)
-- [CWE-918: SSRF](https://cwe.mitre.org/data/definitions/918.html)
-- [CWE-256: Plaintext Password Storage](https://cwe.mitre.org/data/definitions/256.html)
-- [CWE-639: Insecure Access Control](https://cwe.mitre.org/data/definitions/639.html)
-- [OWASP Top 10 2021](https://owasp.org/Top10/)
-
----
-
-**Generated:** February 15, 2026  
-**Application:** Blackjack Table VB.NET Demo  
-**Purpose:** Security Research & Education
