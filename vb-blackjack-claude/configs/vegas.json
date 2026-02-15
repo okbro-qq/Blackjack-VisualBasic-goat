@@ -1,0 +1,12 @@
+{
+  "name": "Vegas Strip Rules",
+  "deckCount": 6,
+  "dealerStandsOnSoft17": false,
+  "blackjackPays": "3:2",
+  "doubleDownAllowed": true,
+  "splitAllowed": true,
+  "insuranceAllowed": true,
+  "surrenderAllowed": true,
+  "minBet": 25,
+  "maxBet": 5000
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Vegas Style",
+  "deckCount": 6,
+  "dealerStandsOnSoft17": false,
+  "blackjackPays": "6:5",
+  "doubleDownAllowed": true,
+  "splitAllowed": true,
+  "insuranceAllowed": true,
+  "surrenderAllowed": true,
+  "minimumBet": 25,
+  "maximumBet": 5000,
+  "description": "Six-deck shoe with Vegas casino rules and higher stakes"
+}

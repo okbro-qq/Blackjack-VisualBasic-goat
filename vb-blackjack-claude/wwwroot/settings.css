@@ -1,0 +1,135 @@
+.back-link {
+    display: inline-block;
+    color: #ffd700;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: opacity 0.3s;
+}
+
+.back-link:hover {
+    opacity: 0.8;
+}
+
+.settings-board {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.config-loader {
+    margin-bottom: 2rem;
+}
+
+.config-loader h2 {
+    font-size: 1.5rem;
+    color: #ffd700;
+    margin-bottom: 0.5rem;
+}
+
+.hint {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.config-input {
+    flex: 1;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.config-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.config-input:focus {
+    border-color: #ffd700;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.load-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: 2px solid #ffd700;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #1e3c72;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.load-btn:hover {
+    background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.config-display {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.config-display h2 {
+    font-size: 1.5rem;
+    color: #ffd700;
+    margin-bottom: 1rem;
+}
+
+.config-content {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    padding: 1.5rem;
+    font-family: 'Courier New', monospace;
+}
+
+.config-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.config-item:last-child {
+    border-bottom: none;
+}
+
+.config-key {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.config-value {
+    color: #fff;
+}
+
+.error-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(255, 0, 0, 0.2);
+    border: 2px solid rgba(255, 0, 0, 0.5);
+    border-radius: 10px;
+    color: #ff6b6b;
+    font-weight: 600;
+}
+
+.hidden {
+    display: none;
+}

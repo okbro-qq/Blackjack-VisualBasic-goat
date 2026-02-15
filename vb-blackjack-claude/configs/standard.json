@@ -1,0 +1,12 @@
+{
+  "name": "Standard Rules",
+  "deckCount": 1,
+  "dealerStandsOnSoft17": true,
+  "blackjackPays": "3:2",
+  "doubleDownAllowed": true,
+  "splitAllowed": true,
+  "insuranceAllowed": true,
+  "surrenderAllowed": false,
+  "minBet": 5,
+  "maxBet": 500
+}

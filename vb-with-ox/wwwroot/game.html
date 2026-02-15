@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <title>Blackjack Game</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .game-board {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .hand {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        .hand h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .cards {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            min-height: 80px;
+            align-items: center;
+        }
+        .card {
+            background: white;
+            color: #333;
+            padding: 1rem 0.8rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-width: 60px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .card.red {
+            color: #e74c3c;
+        }
+        .total {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-primary {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: rgba(46, 204, 113, 0.5);
+        }
+        .result {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .result.win {
+            background: rgba(46, 204, 113, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.5);
+        }
+        .result.lose {
+            background: rgba(231, 76, 60, 0.3);
+            border: 2px solid rgba(231, 76, 60, 0.5);
+        }
+        .result.push {
+            background: rgba(241, 196, 15, 0.3);
+            border: 2px solid rgba(241, 196, 15, 0.5);
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container game-container">
+        <h1>🃏 Blackjack Game</h1>
+        
+        <div class="result" id="result"></div>
+        
+        <div class="game-board">
+            <div class="hand">
+                <h2>Dealer</h2>
+                <div class="cards" id="dealer-cards"></div>
+                <div class="total" id="dealer-total"></div>
+            </div>
+            
+            <div class="hand">
+                <h2>Player</h2>
+                <div class="cards" id="player-cards"></div>
+                <div class="total" id="player-total"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="deal-btn" onclick="dealCards()">Deal</button>
+            <button class="btn" id="hit-btn" onclick="hit()" disabled>Hit</button>
+            <button class="btn" id="stand-btn" onclick="stand()" disabled>Stand</button>
+        </div>
+        
+        <a href="/navigate?url=/" class="back-link">← Back to Lobby</a>
+    </div>
+    
+    <script src="blackjack.js"></script>
+    <!-- OX Agent: XSS prevented by Content Security Policy -->
+</body>
+</html>

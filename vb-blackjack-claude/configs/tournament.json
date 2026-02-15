@@ -1,0 +1,12 @@
+{
+  "name": "Tournament Rules",
+  "deckCount": 2,
+  "dealerStandsOnSoft17": true,
+  "blackjackPays": "2:1",
+  "doubleDownAllowed": true,
+  "splitAllowed": false,
+  "insuranceAllowed": false,
+  "surrenderAllowed": false,
+  "minBet": 100,
+  "maxBet": 1000
+}

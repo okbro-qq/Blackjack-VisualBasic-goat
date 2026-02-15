@@ -1,0 +1,124 @@
+.back-link {
+    display: inline-block;
+    color: #ffd700;
+    text-decoration: none;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+    transition: opacity 0.3s;
+}
+
+.back-link:hover {
+    opacity: 0.8;
+}
+
+.game-board {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dealer-section,
+.player-section {
+    margin: 1.5rem 0;
+}
+
+.dealer-section h2,
+.player-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #ffd700;
+}
+
+.card-container {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    min-height: 80px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.card {
+    width: 60px;
+    height: 80px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card.red {
+    color: #c41e3a;
+}
+
+.card.hidden {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    font-size: 2rem;
+}
+
+.total {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.result {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 1.5rem 0;
+    min-height: 40px;
+    color: #ffd700;
+}
+
+.controls {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.game-btn {
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.game-btn:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.game-btn.primary {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #1e3c72;
+    border-color: #ffd700;
+}
+
+.game-btn.primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #ffed4e 0%, #ffd700 100%);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.game-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

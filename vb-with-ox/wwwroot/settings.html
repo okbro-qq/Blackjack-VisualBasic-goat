@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+    <title>Game Settings</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .config-loader {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem 0;
+        }
+        .input-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+        .input-group input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        .btn {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+            background: rgba(46, 204, 113, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: rgba(46, 204, 113, 0.5);
+            transform: translateY(-2px);
+        }
+        .presets {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        .preset-btn {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            background: rgba(52, 152, 219, 0.3);
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .preset-btn:hover {
+            background: rgba(52, 152, 219, 0.5);
+        }
+        .config-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            min-height: 100px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .success {
+            color: #2ecc71;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 2rem;
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container settings-container">
+        <h1>⚙️ Game Settings</h1>
+        
+        <div class="config-loader">
+            <h2>Load Configuration Preset</h2>
+            
+            <div class="presets">
+                <button class="preset-btn" onclick="setConfigName('standard')">Standard</button>
+                <button class="preset-btn" onclick="setConfigName('vegas')">Vegas</button>
+                <button class="preset-btn" onclick="setConfigName('tournament')">Tournament</button>
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="config-name" placeholder="Enter config name (e.g., standard, vegas, tournament)" />
+                <button class="btn" onclick="loadConfig()">Load Config</button>
+            </div>
+            
+            <div id="status"></div>
+            
+            <div class="config-display" id="config-display">
+                No configuration loaded. Enter a config name and click "Load Config".
+            </div>
+        </div>
+        
+        <a href="/navigate?url=/" class="back-link">← Back to Lobby</a>
+    </div>
+    
+    <script>
+        function setConfigName(name) {
+            document.getElementById('config-name').value = name;
+        }
+        
+        async function loadConfig() {
+            const configName = document.getElementById('config-name').value.trim();
+            const statusDiv = document.getElementById('status');
+            const displayDiv = document.getElementById('config-display');
+            
+            if (!configName) {
+                statusDiv.innerHTML = '<p class="error">Please enter a config name</p>';
+                return;
+            }
+            
+            statusDiv.innerHTML = '<p>Loading...</p>';
+            
+            try {
+                const response = await fetch(`/settings/load?config=${encodeURIComponent(configName)}`);
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    statusDiv.innerHTML = `<p class="error">Error: ${error.error || 'Failed to load config'}</p>`;
+                    displayDiv.textContent = 'Failed to load configuration.';
+                    return;
+                }
+                
+                const config = await response.json();
+                statusDiv.innerHTML = '<p class="success">Configuration loaded successfully!</p>';
+                displayDiv.textContent = JSON.stringify(config, null, 2);
+                
+            } catch (error) {
+                statusDiv.innerHTML = '<p class="error">Error: Failed to load configuration</p>';
+                displayDiv.textContent = 'Network error or invalid response.';
+                console.error('Load error:', error);
+            }
+        }
+        
+        // Allow Enter key to trigger load
+        document.getElementById('config-name').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                loadConfig();
+            }
+        });
+    </script>
+    <!-- OX Agent: XSS prevented by Content Security Policy -->
+</body>
+</html>

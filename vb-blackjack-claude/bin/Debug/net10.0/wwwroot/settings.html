@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Settings</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/settings.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚙️ Game Settings</h1>
+            <a href="/navigate?url=/" class="back-link">← Back to Lobby</a>
+        </header>
+        
+        <main>
+            <div class="settings-board">
+                <div class="config-loader">
+                    <h2>Load Configuration Preset</h2>
+                    <p class="hint">Available presets: standard, vegas, tournament</p>
+                    
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            id="config-name" 
+                            placeholder="Enter preset name (e.g., standard)"
+                            class="config-input"
+                        />
+                        <button id="load-btn" class="load-btn">Load Config</button>
+                    </div>
+                </div>
+                
+                <div id="config-display" class="config-display hidden">
+                    <h2>Current Configuration</h2>
+                    <div id="config-content" class="config-content"></div>
+                </div>
+                
+                <div id="error-message" class="error-message hidden"></div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="/settings.js"></script>
+</body>
+</html>

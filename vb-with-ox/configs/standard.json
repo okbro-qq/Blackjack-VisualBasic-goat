@@ -1,0 +1,13 @@
+{
+  "name": "Standard Blackjack",
+  "deckCount": 1,
+  "dealerStandsOnSoft17": true,
+  "blackjackPays": "3:2",
+  "doubleDownAllowed": true,
+  "splitAllowed": true,
+  "insuranceAllowed": true,
+  "surrenderAllowed": false,
+  "minimumBet": 10,
+  "maximumBet": 500,
+  "description": "Classic single-deck blackjack with standard rules"
+}
